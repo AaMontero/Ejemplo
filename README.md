@@ -2,7 +2,7 @@
 ## Instalación de MPI en Ubuntu
 
 sudo apt-get update 
-sudo apt-get install libopenmpi-dec
+sudo apt-get install libopenmpi-dev
 
 Verificar la instalación
 mpiexec --version
@@ -14,3 +14,4 @@ mpicxx main.cpp -o ejemplo
 
 ##Ejecutar
 mpiexec -n 2 ./ejemplo
+mpiexec -n 4 ./ejemplo
