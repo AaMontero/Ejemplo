@@ -1,3 +1,5 @@
+//Trabajo Grupal - Asimbaya Ismael, Montero Anthonny, Troya Roberth 
+
 #include <iostream>
 #include <cmath>
 #include <omp.h>
@@ -53,8 +55,8 @@ int main(int argc, char ** argv) {
     MPI_Init(&argc,&argv); 
     int rank; 
     int size; 
-    int n = 10000000; 
-    int data[n]; 
+    int n = 10000; 
+    int* data = new int[n]; 
     double a = 0; 
     double b = 1; 
     double h = (b-a)/n; 
@@ -91,11 +93,12 @@ int main(int argc, char ** argv) {
         double main_time = MPI_Wtime()-start_time;
         std::printf("El tiempo de trabajo es: %lf ", main_time); 
     }else{
-        MPI_Recv(data, n/size -1,MPI_INT,MPI_ANY_SOURCE,0,MPI_COMM_WORLD, MPI_STATUS_IGNORE); 
+        int* dataParcial = new int[n/size]; 
+        MPI_Recv(dataParcial, n/size -1,MPI_INT,MPI_ANY_SOURCE,0,MPI_COMM_WORLD, MPI_STATUS_IGNORE); 
         std::printf("Hola, soy el rank %d, de un total de %d procesos \n", rank, size);
         double sumaParcial = 0;
         for (int i = 0; i < n/size ; i++ ){
-            sumaParcial += f(a + data[i] * h);    
+            sumaParcial += f(a + dataParcial[i] * h);    
         }             
         MPI_Send(&sumaParcial,1,MPI_DOUBLE,0,0,MPI_COMM_WORLD);
     }

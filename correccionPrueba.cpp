@@ -42,24 +42,21 @@ int main(int argc, char ** argv){
     MPI_Comm_size(MPI_COMM_WORLD,&size); 
     int total_puntos = std::ceil(MAX_PUNTOS/(float)size); //30/4 = 7.5 ==> 8
     int tmp_puntos = MAX_PUNTOS - (size -1)*total_puntos; // 30-3*8 ==> 6
-
+    
     if(rank == 0 ){
         std::vector<int> A = {6, 8, 7, 9, 7, 6, 6, 5, 5, 0, 0, 6, 5, 3, 6, 3, 8, 2, 1, 5, 8, 8, 3, 1, 6, 0, 0, 9, 0, 2, 1, 9, 0, 1, 8, 7, 7, 4, 5, 4, 7, 5, 2, 2, 0, 0, 7, 8, 3, 8, 5, 1, 9, 9, 4, 5, 1, 5, 6, 4, 7, 0, 3, 9, 1, 1, 6, 0, 8, 1, 4, 5, 8, 8, 7, 8, 9, 6, 8, 2, 7, 4, 5, 6, 3, 0, 3, 6, 7, 1}; 
         std::vector<int> C = {0,6,1,3,5,2,7,1,4};
-       
         for(int i =1 ; i<size ; i++){
             int index = (i-1) * total_puntos*3; 
             // Enviar los puntos
             MPI_Send(&A[index], total_puntos*3, MPI_INT, i , 0 , MPI_COMM_WORLD); 
             // Enviar los centros 
             MPI_Send(&C[0], MAX_CENTROS*3, MPI_INT, i , 0 , MPI_COMM_WORLD); 
-                     
         }
         //Calcular 
             std::vector<int> datos0; 
             int indice_rank0 =total_puntos*3*(size-1);
             datos0.insert(datos0.begin(), A.begin()+indice_rank0, A.end()); 
-            
             std::vector<int> indices0 = medir_distancias(datos0, C, 6);
             std::vector<int> indices1(total_puntos); 
             std::vector<int> indices2(total_puntos); 
@@ -72,7 +69,6 @@ int main(int argc, char ** argv){
         indices.insert(indices.end(), indices2.begin(), indices2.end());
         indices.insert(indices.end(), indices3.begin(), indices3.end());
         indices.insert(indices.end(), indices0.begin(), indices0.end());
-
                 //Imprimir
         std::printf("Centros\n"); 
         for(int i = 0; i<MAX_CENTROS*3; i+=3){
@@ -85,15 +81,11 @@ int main(int argc, char ** argv){
             std::printf("%2d: (%d,%d,%d), indices =%d\n", index, A[i], A[i+1], A[i+2], indices[index]); 
             index++; 
         }
-
-
     }else{
         std::vector<int> datos(total_puntos*3);
         std::vector<int> centros (MAX_CENTROS*3); 
-
         MPI_Recv(datos.data(),total_puntos*3, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(centros.data(),total_puntos*3, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
         //Calcular distancias 
         std::vector<int> distancias = medir_distancias(datos,centros,total_puntos);
         //Enviar al rank 0 
