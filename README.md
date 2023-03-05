@@ -24,6 +24,8 @@ mpicxx ejemploPI.cpp -o ejemplo
 mpicxx EjemploNumPerfectosAsinc.cpp -o ejemplo
 mpicxx TrabajoGrupal.cpp -o ejemplo 
 mpicxx correccionPrueba.cpp -o ejemplo 
+mpicxx correcionPBCast.cpp -o ejemplo 
+mpicxx ejemploReduce.cpp -o ejemplo 
 
 mpicxx -fopenmp TrabajoGrupal.cpp -o ejemplo
 

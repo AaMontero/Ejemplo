@@ -52,8 +52,11 @@ int main(int argc, char ** argv){
             // Enviar los puntos - Se envian los primeros datos 
             MPI_Send(&A[index], total_puntos*3, MPI_INT, i , 0 , MPI_COMM_WORLD); 
             // Enviar los centros - Aqui se podría hace un bcast
-            MPI_Send(&C[0], MAX_CENTROS*3, MPI_INT, i , 0 , MPI_COMM_WORLD); 
+            //MPI_Send(&C[0], MAX_CENTROS*3, MPI_INT, i , 0 , MPI_COMM_WORLD); 
         }
+        MPI_Bcast(&C[0], MAX_CENTROS*3, MPI_INT, 0, MPI_COMM_WORLD);
+        //std::vector<int> centros (MAX_CENTROS*3); 
+        //MPI_Recv(centros.data(),total_puntos*3, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         //Calcular 
             std::vector<int> datos0; 
             int indice_rank0 =total_puntos*3*(size-1); //Valor inicial 
@@ -88,7 +91,7 @@ int main(int argc, char ** argv){
         std::vector<int> datos(total_puntos*3);
         std::vector<int> centros (MAX_CENTROS*3); 
         MPI_Recv(datos.data(),total_puntos*3, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        MPI_Recv(centros.data(),total_puntos*3, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        MPI_Bcast(centros.data(),MAX_CENTROS*3, MPI_INT, 0, MPI_COMM_WORLD);
         //Calcular distancias 
         std::vector<int> distancias = medir_distancias(datos,centros,total_puntos);
         //Enviar al rank 0 
