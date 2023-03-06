@@ -31,6 +31,7 @@ mpicxx multiMatrices.cpp -o ejemplo
 
 
 mpicxx -fopenmp TrabajoGrupal.cpp -o ejemplo
+mpicxx -fopenmp multiMatricesOMP.cpp -o ejemplo
 
 ##Ejecutar
 mpiexec -n 2 ./ejemplo
