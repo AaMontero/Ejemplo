@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <omp.h>
-#include <mpi.h> 
+#include <cstdlib>
 #include <vector> 
 #include <ctime>
 using namespace std;
@@ -17,7 +17,6 @@ std::vector<int> multiplicarVectMatriz(std::vector<int> vectores, std::vector<in
             aux += vectores[j+i] * matriz[i+j]; //0,0 -> 1 * 0 + 4 // 1,0 2
             std::printf("Multiplicando [%d]*[%d]\n",vectores[j],matriz[i+dimension*j]);
         }
-        //std::printf("%d",aux); 
         respParcial.push_back(aux); 
     }
     return respParcial; 
@@ -47,38 +46,50 @@ std::vector<int> matrizResp(std::vector<int> matrizA, std::vector<int> matrizB){
 }
 
 
+const int N = 1000;
+int main()
+{
+    double A[N][N], B[N][N], C[N][N];
 
-int main(){
+    // Inicializar las matrices A y B con valores aleatorios
     srand(time(NULL));
-    for(int i = 0; i< dimension*dimension; i++){
-        matrizA[i] =  (std::rand()%10+1);
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            A[i][j] = rand() % 100;
+            B[i][j] = rand() % 100;
+        }
     }
-        for(int i = 0; i< dimension*dimension; i++){
-        matrizB[i] =  (std::rand()%10+1);
+
+    // Inicializar la matriz C con ceros
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            C[i][j] = 0.0;
+        }
     }
-    std::vector<int> matrizFinalResp = matrizResp(matrizA, matrizB); 
-    std::printf("\nMatriz A");       
-    for(int i = 0; i < dimension*dimension; i++){
-        if(i % dimension==0){
-            std::printf("\n");
-        }
-        std::printf("[%d]", matrizA[i]);
-    } 
-    std::printf("\nMatriz B");       
-    for(int i = 0; i < dimension*dimension; i++){
-        if(i % dimension==0){
-            std::printf("\n");
-        }
-        std::printf("[%d]", matrizB[i]);
-    } 
-    std::printf("\nMatriz Resultante");       
-    for(int i = 0; i < dimension*dimension; i++){
-        if(i % dimension==0){
-            std::printf("\n");
-        }
-        std::printf("[%d]", matrizFinalResp[i]);
-    } 
 
+    // Multiplicar las matrices A y B utilizando OpenMP
+    #pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            for (int k = 0; k < N; k++) {
+                 #pragma omp atomic
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
 
-    return 0; 
+    // Imprimir los resultados
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            cout << C[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
 }
+
+
+
+
+

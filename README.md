@@ -29,9 +29,11 @@ mpicxx ejemploReduce.cpp -o ejemplo
 mpicxx ejemploParalelo.cpp -o ejemplo 
 mpicxx multiMatrices.cpp -o ejemplo 
 
-
+mpicxx -fopenmp productoPunto.cpp -o ejemplo
 mpicxx -fopenmp TrabajoGrupal.cpp -o ejemplo
-mpicxx -fopenmp multiMatricesOMP.cpp -o ejemplo
+mpicxx -fopenmp multMatricesOMP.cpp -o ejemplo
+g++ -fopenmp multMatricesOMP.cpp -o ejemplo
+
 
 ##Ejecutar
 mpiexec -n 2 ./ejemplo
