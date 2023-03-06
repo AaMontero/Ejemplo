@@ -30,6 +30,7 @@ mpicxx ejemploParalelo.cpp -o ejemplo
 mpicxx multiMatrices.cpp -o ejemplo 
 
 mpicxx -fopenmp productoPunto.cpp -o ejemplo
+mpicxx -fopenmp examenProgra.cpp -o ejemplo
 mpicxx -fopenmp TrabajoGrupal.cpp -o ejemplo
 mpicxx -fopenmp multMatricesOMP.cpp -o ejemplo
 g++ -fopenmp multMatricesOMP.cpp -o ejemplo

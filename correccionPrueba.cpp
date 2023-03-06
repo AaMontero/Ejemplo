@@ -92,7 +92,7 @@ int main(int argc, char ** argv){
         //Calcular distancias 
         std::vector<int> distancias = medir_distancias(datos,centros,total_puntos);
         //Enviar al rank 0 
-         MPI_Send(distancias.data(), total_puntos, MPI_INT, 0 , 0 , MPI_COMM_WORLD); 
+        MPI_Send(distancias.data(), total_puntos, MPI_INT, 0 , 0 , MPI_COMM_WORLD); 
 
     }
 
